@@ -8,17 +8,28 @@ namespace PerceptronTrainer.UI
     {
         public static void ShowTestResults(Perceptron perceptron, TrainingData data)
         {
+            if (data.Inputs.Length == 0)
+            {
+                AnsiConsole.MarkupLine("[yellow]No test data available.[/]");
+                return;
+            }
+            
             AnsiConsole.WriteLine();
             var table = new Table()
                 .Border(TableBorder.Rounded)
                 .BorderColor(Color.Grey)
                 .Title("[bold cyan]Test Results[/]");
 
-            string label1 = data.InputLabels?[0] ?? "Input 1";
-            string label2 = data.InputLabels?[1] ?? "Input 2";
+            // Add columns dynamically based on input size
+            int inputSize = data.Inputs[0].Length;
+            for (int i = 0; i < inputSize; i++)
+            {
+                string label = (data.InputLabels != null && i < data.InputLabels.Length) 
+                    ? data.InputLabels[i] 
+                    : $"Input {i + 1}";
+                table.AddColumn(new TableColumn($"[yellow]{label}[/]").Centered());
+            }
             
-            table.AddColumn(new TableColumn($"[yellow]{label1}[/]").Centered());
-            table.AddColumn(new TableColumn($"[yellow]{label2}[/]").Centered());
             table.AddColumn(new TableColumn("[yellow]Output[/]").Centered());
             table.AddColumn(new TableColumn("[yellow]Expected[/]").Centered());
             table.AddColumn(new TableColumn("[yellow]Result[/]").Centered());
@@ -32,12 +43,17 @@ namespace PerceptronTrainer.UI
 
                 string resultText = isCorrect ? "[green]✓ PASS[/]" : "[red]✗ FAIL[/]";
 
-                table.AddRow(
-                    data.Inputs[i][0].ToString(),
-                    data.Inputs[i][1].ToString(),
-                    prediction.ToString(),
-                    data.Outputs[i].ToString(),
-                    resultText);
+                // Build row data dynamically
+                var rowData = new List<string>();
+                for (int j = 0; j < data.Inputs[i].Length; j++)
+                {
+                    rowData.Add(data.Inputs[i][j].ToString());
+                }
+                rowData.Add(prediction.ToString());
+                rowData.Add(data.Outputs[i].ToString());
+                rowData.Add(resultText);
+                
+                table.AddRow(rowData.ToArray());
             }
 
             AnsiConsole.Write(table);
