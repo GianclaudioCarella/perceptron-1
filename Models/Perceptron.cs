@@ -33,6 +33,11 @@ namespace PerceptronTrainer.Models
         // Prediction
         public int Predict(double[] inputs)
         {
+            if (inputs.Length != weights.Length)
+            {
+                throw new ArgumentException($"Input size mismatch. Expected {weights.Length} inputs, but got {inputs.Length}.");
+            }
+            
             double sum = bias;
             for (int i = 0; i < inputs.Length; i++)
             {
@@ -44,6 +49,19 @@ namespace PerceptronTrainer.Models
         // Training (verbose mode with step-by-step details)
         public void Train(double[][] trainingInputs, int[] trainingOutputs, int epochs, bool verbose = true)
         {
+            if (trainingInputs.Length != trainingOutputs.Length)
+            {
+                throw new ArgumentException($"Training data mismatch. Got {trainingInputs.Length} inputs but {trainingOutputs.Length} outputs.");
+            }
+            
+            for (int i = 0; i < trainingInputs.Length; i++)
+            {
+                if (trainingInputs[i].Length != weights.Length)
+                {
+                    throw new ArgumentException($"Training input {i} has incorrect size. Expected {weights.Length} inputs, but got {trainingInputs[i].Length}.");
+                }
+            }
+            
             if (verbose)
             {
                 AnsiConsole.WriteLine();
@@ -79,7 +97,8 @@ namespace PerceptronTrainer.Models
                     {
                         // Calculate prediction step by step for display
                         double sum = bias;
-                        AnsiConsole.Write($"  Sample {i}: [{trainingInputs[i][0]}, {trainingInputs[i][1]}] → ");
+                        string inputStr = string.Join(", ", trainingInputs[i]);
+                        AnsiConsole.Write($"  Sample {i}: [{inputStr}] → ");
                         
                         string calculation = $"sum = {bias:F4}";
                         for (int j = 0; j < weights.Length; j++)
