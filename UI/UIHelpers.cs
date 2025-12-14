@@ -87,6 +87,10 @@ namespace PerceptronTrainer.UI
                 {
                     AnsiConsole.MarkupLine("[green]Great! 🎉[/]");
                 }
+                
+                if (!AnsiConsole.Confirm("[yellow]Test another fruit?[/]", true))
+                    break;
+                
                 AnsiConsole.WriteLine();
             }
         }
@@ -127,6 +131,10 @@ namespace PerceptronTrainer.UI
                 {
                     AnsiConsole.MarkupLine("[green]Great! 🎉[/]");
                 }
+                
+                if (!AnsiConsole.Confirm("[yellow]Test another weather condition?[/]", true))
+                    break;
+                
                 AnsiConsole.WriteLine();
             }
         }
@@ -167,6 +175,10 @@ namespace PerceptronTrainer.UI
                 {
                     AnsiConsole.MarkupLine("[green]Great! 🎉[/]");
                 }
+                
+                if (!AnsiConsole.Confirm("[yellow]Test another object?[/]", true))
+                    break;
+                
                 AnsiConsole.WriteLine();
             }
         }
@@ -205,6 +217,11 @@ namespace PerceptronTrainer.UI
                     perceptron.TrainOnSingleSample(new double[] { input1, input2 }, correctAnswer);
                     AnsiConsole.WriteLine();
                 }
+                
+                if (!AnsiConsole.Confirm("[yellow]Test another input?[/]", true))
+                    break;
+                
+                AnsiConsole.WriteLine();
             }
         }
     }
